@@ -9,14 +9,22 @@
 #include <string>
 using namespace std;
 
+class sistema{
+  public:
+    string cidade="não definida";
+    string local="não definido";
+    string id_no="não definido";
+};
+
+
 class sensor {
   public:
     int pino=9999; // pino do sensor
     int valor=9999; // valor do sensor
-    int amostragem_min=2; // tempo de amostragem em minutos
+    int amostragem_segundos=2; // tempo de amostragem em segundos
     string tipo_sensor=" não_definido "; // tipo de sensor ( chuva, vento, etc )
     string unidade_medida="não definido"; // unidade de medida ( mm, m/s, etc )
-    string flags="vazio"; // flags adicionais ( Ok, aviso, etc )
+    //string flags="vazio"; // flags adicionais ( Ok, aviso, etc )
     string tipo_leitura = " não definido "; // analógico, digital, I2C, etc
 };
 #endif

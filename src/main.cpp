@@ -94,7 +94,7 @@ void setup() {
   // Configuração dos sensores
   //chuva
   chuva.pino = 34; // pino do sensor de chuva
-  chuva.amostragem_min = 10; // tempo de amostragem em segundos
+  chuva.amostragem_segundos = 10; // tempo de amostragem em segundos
   chuva.tipo_sensor = "sensor_chuva";
   chuva.unidade_medida = "mm/min";
   chuva.tipo_leitura = "digital"; // leitura de pulsos
@@ -102,14 +102,14 @@ void setup() {
 
   // direção do vento
   dir_vento.pino = 35; // pino do sensor de direção do vento
-  dir_vento.amostragem_min = 10; // tempo de amostragem em segundos
+  dir_vento.amostragem_segundos = 10; // tempo de amostragem em segundos
   dir_vento.tipo_sensor = "sensor_dir_vento";
   dir_vento.unidade_medida = "graus"; // ver o datasheet para perceber os graus
   dir_vento.tipo_leitura = "analógico"; // divisor resistivo simples
 
   // velocidade do vento
   vel_vento.pino = 32; // pino do sensor de velocidade do vento
-  vel_vento.amostragem_min = 10; // tempo de amostragem em segundos
+  vel_vento.amostragem_segundos = 10; // tempo de amostragem em segundos
   vel_vento.tipo_sensor = "sensor_vel_vento"; 
   vel_vento.unidade_medida = "km/h"; // nota: 2.4Km/h = 60 pulsos/min
   vel_vento.tipo_leitura = "digital"; // leitura de pulsos
@@ -123,21 +123,13 @@ void loop() {
   client.loop(); // 
   
   // leitura de sensores:
-  chuva.valor = ler_sensor_chuva(chuva.pino, chuva.amostragem_min, 0.2794); // mm/min
+  chuva.valor = ler_sensor_chuva(chuva.pino, chuva.amostragem_segundos, 0.2794); // mm/min
 
-  // formata mensagem MQTT
-  string pacote_chuva = formatar_sensores_mqtt(&chuva, '#');
-  Serial.print("Pacote chuva: ");
-  Serial.println(pacote_chuva.data());
   
-  // formata pacote final MQTT
-  string Mensagem_mqtt = "Nó_12$"+ pacote_chuva + "!";  // alterar esta parte para termos tudo como variaveis!!  
-
-  Serial.print("Pacote final: ");
-  Serial.println(Mensagem_mqtt.data());
-
   // publica mensagem MQTT
 
-  client.publish("testes", Mensagem_mqtt.c_str());
+  // chama funçaõ publicar
+
+
   delay(20000); // delay 20 segundo
 }
