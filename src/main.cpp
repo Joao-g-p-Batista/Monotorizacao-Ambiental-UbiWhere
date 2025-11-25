@@ -25,6 +25,7 @@ using namespace std;
 #include "sensor_vel_vento.h"
 
 // Sensores e variaveis globais
+sistema No_sistema;
 sensor chuva;
 sensor dir_vento;
 sensor vel_vento;
@@ -42,10 +43,10 @@ const char* ssid = "Sony_jb";
 const char* password = "carapau2000";
 
 // MQTT broker details
-const char* mqtt_broker = "1dc4c00d206c435ca94935a4c601f021.s1.eu.hivemq.cloud";
+const char* mqtt_broker = "1c8370c6b65e49b48b8b05efc8f0f0db.s1.eu.hivemq.cloud";
 const int mqtt_port = 8883;
 const char* mqtt_username = "Rede_sensores_IOT";
-const char* mqtt_password = "Senha1234";
+const char* mqtt_password = "!Q2w3e4r";
 
 // definições wifi
 WiFiClientSecure espClient;
@@ -84,12 +85,20 @@ void reconnect() {
 }
 
 void setup() {
+  // teste de configuração do nó MQTT
+  //No_sistema = Configuracao_no();// faz configuração do nó MQTT ( local, cidade, id_nó )
+  //função não funciona : (( erro de conversões de strings !!!!)
+  
+  // setup genérico
   Serial.begin(115200);
-  Serial.print(chuva.valor);
-
-  setup_wifi();
+  No_sistema.cidade = "Aveiro";
+  No_sistema.local = "Ubiwhere";
+  No_sistema.id_no = "Nó_001";
+  
+  //inicializa o wi-fi e mqtt ( trocar por ethernet )
+  setup_wifi();// conecta à rede Wi-Fi
   espClient.setInsecure(); // Usar conexão insegura para MQTT sobre TLS
-  client.setServer(mqtt_broker, mqtt_port);
+  client.setServer(mqtt_broker, mqtt_port);// configura broker MQTT
 
   // Configuração dos sensores
   //chuva
@@ -121,15 +130,13 @@ void loop() {
     reconnect();
   }
   client.loop(); // 
-  
   // leitura de sensores:
   chuva.valor = ler_sensor_chuva(chuva.pino, chuva.amostragem_segundos, 0.2794); // mm/min
 
-  
   // publica mensagem MQTT
-
-  // chama funçaõ publicar
-
+  string testes = formatar_sistema(No_sistema, chuva);
+  string mensagem = formatar_sensor(chuva);
+  client.publish(testes.c_str(), mensagem.c_str());
 
   delay(20000); // delay 20 segundo
 }
