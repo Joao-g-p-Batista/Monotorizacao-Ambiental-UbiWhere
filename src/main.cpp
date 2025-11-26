@@ -102,7 +102,8 @@ void setup() {
 
   // Configuração dos sensores
   //chuva
-  chuva.pino = 34; // pino do sensor de chuva
+  chuva.pino = 2; // pino do sensor de chuva
+  pinMode(chuva.pino, INPUT_PULLUP);
   chuva.amostragem_segundos = 10; // tempo de amostragem em segundos
   chuva.tipo_sensor = "sensor_chuva";
   chuva.unidade_medida = "mm/min";
@@ -138,5 +139,5 @@ void loop() {
   string mensagem = formatar_sensor(chuva);
   client.publish(testes.c_str(), mensagem.c_str());
 
-  delay(20000); // delay 20 segundo
+  delay(5000); // delay 5 segundo
 }

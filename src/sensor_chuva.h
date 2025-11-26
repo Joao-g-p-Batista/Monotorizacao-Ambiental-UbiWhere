@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-int ler_sensor_chuva(int pin, int tempo_amostragem, int mm_por_pulso); 
+float ler_sensor_chuva(int pin, int tempo_amostragem, float mm_por_pulso); 
 // faz amostragem do sensor de chuva no pino 'pin' por 'tempo_amostragem' minutos
 // retorna a média das leituras em mm/min
 // pin: pino digital conectado ao sensor de chuva

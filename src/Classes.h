@@ -20,7 +20,7 @@ class sistema{
 class sensor {
   public:
     int pino=9999; // pino do sensor
-    int valor=9999; // valor do sensor
+    float valor=9999; // valor do sensor
     int amostragem_segundos=2; // tempo de amostragem em segundos
     string tipo_sensor=" não_definido "; // tipo de sensor ( chuva, vento, etc )
     string unidade_medida="não definido"; // unidade de medida ( mm, m/s, etc )

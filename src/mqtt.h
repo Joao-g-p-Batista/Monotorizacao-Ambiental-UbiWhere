@@ -25,6 +25,19 @@ string formatar_sistema(sistema No_sistema,sensor Sensor_atual );// sousa
 //Durante operação: ler os dados e criar uma string 
 //ouptut: string estilo " {"temperature": 22.20} "
 
+// Versão NGSI_LD:
+/*
+{
+  "@context": [
+   
+  ],
+  "id": "urn:ngsi-ld:ID_001:Sensor_Temperature",
+  "type": temperature,
+  "value": 25.5,
+  "units": "Celsius",
+}
+  */
+
 //void publicar_mqtt(sistema No_sistema, sensor Sensor_atual);//batista
 // nota: não fucniona pois a função de cliente apenas...
 // funciona dentro de main

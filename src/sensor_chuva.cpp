@@ -11,7 +11,7 @@
 // Ou, fazer uma função que verifica o valor e devolve uma flag de confirmação separadamente.
 
 
-int ler_sensor_chuva(int pin, int tempo_amostragem, int mm_por_pulso) {
+float ler_sensor_chuva(int pin, int tempo_amostragem, float mm_por_pulso) {
     Serial.println("Lendo sensor de chuva...");        
     int contador_pulsos=0; // contador de Pulsos
     int timer=0; // em milisegundos
@@ -22,7 +22,13 @@ int ler_sensor_chuva(int pin, int tempo_amostragem, int mm_por_pulso) {
     while (timer<tempo_amostragem*1000){ // tempo_amostragem em milisegundos( minutos*60*1000)
         // lê o pino do sensor
         val = digitalRead(pin);
+
+        Serial.print("valor lido do pino: ");
+        Serial.print(val);  
+        Serial.print("\n");
+
         if (val == 0 && pulse_lock == 0) {// verifica se houve mudança de estado do segundo anterior
+            Serial.print("loop - pulso detectado");
             contador_pulsos = contador_pulsos + 1;
             pulse_lock = 1;  // bloqueia este pulso para náo repetir a contagem
         }
@@ -33,9 +39,13 @@ int ler_sensor_chuva(int pin, int tempo_amostragem, int mm_por_pulso) {
         }
         
         // aguarda 10 milisegundo antes de nova leitura
-        delay(10);
-        timer = timer + 10;
+        delay(100);
+        timer = timer + 100;
     }
+        Serial.print("total de pulsos detectados: ");
+        Serial.print(contador_pulsos);
+        Serial.print("\n");
+        
         Serial.print("chuva em mm/min: ");
         Serial.print( (contador_pulsos * mm_por_pulso) / tempo_amostragem ) ;   
         Serial.print("\n");
