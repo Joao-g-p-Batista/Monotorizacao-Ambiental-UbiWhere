@@ -127,13 +127,22 @@ void setup() {
 }
 
 void loop() {
-  if (!client.connected()) {
-    reconnect();
-  }
+
+
+  // publica os valores??
+  
+
+
+  //Le os sensores
   client.loop(); // 
   // leitura de sensores:
   chuva.valor = ler_sensor_chuva(chuva.pino, chuva.amostragem_segundos, 0.2794); // mm/min
 
+  // Verifica a ligação MQTT
+
+  if (!client.connected()) {
+    reconnect();
+  }
   // publica mensagem MQTT
   string testes = formatar_sistema(No_sistema, chuva);
   string mensagem = formatar_sensor(chuva);
