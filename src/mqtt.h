@@ -27,14 +27,7 @@ string formatar_sistema(sistema No_sistema,sensor Sensor_atual );// sousa
 
 // Versão NGSI_LD:
 /*
-{
-  "@context": [
-   
-  ],
-  "id": "urn:ngsi-ld:ID_001:Sensor_Temperature",
-  "type": temperature,
-  "value": 25.5,
-  "units": "Celsius",
+{ "@context": ["http://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],  "id": "urn:ngsi-ld:ID_001:Sensor_Temperature",  "type": temperature,  "value": 25.5,  "units": "Celsius",
 }
   */
 

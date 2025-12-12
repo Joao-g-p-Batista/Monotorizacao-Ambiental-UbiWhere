@@ -15,24 +15,41 @@
 #include <WiFiClientSecure.h>
 #include <iostream>
 #include <string>
+
+
+
 using namespace std;
 
 // bibliotecas por sensor
 #include "Classes.h"
 #include "mqtt.h"
-#include "sensor_chuva.h"
-#include "sensor_dir_vento.h"
-#include "sensor_vel_vento.h"
+#include "weather_core.h"
+#include "wind_speed_sensor.h"
+#include "wind_direction_sensor.h"
+#include "rain_sensor.h"
+#include "light_sensor.h"
 
 // Sensores e variaveis globais
+WeatherCore core;
+
 sistema No_sistema;
 sensor chuva;
 sensor dir_vento;
 sensor vel_vento;
-//sensor sensor_temp;
-//sensor sensor_co2;
-//sensor sensor_co;
-//sensor sensor_luminosidade;
+sensor luz;
+
+
+// configuração do sensor de luminosidade
+  LightSensorConfig_t lightConfig = {
+    .sensorPin = 34,
+    .samples = 20,
+    .minRaw = 0,
+    .maxRaw = 0
+};
+static LightSensor_t lightSensor;
+static LightSensorData_t lightData;
+
+
 
 // lista ponteiros sensores
 sensor* lista_sensores[] = { &chuva, &dir_vento, &vel_vento };
@@ -94,6 +111,8 @@ void setup() {
   No_sistema.cidade = "Aveiro";
   No_sistema.local = "Ubiwhere";
   No_sistema.id_no = "Nó_001";
+
+ 
   
   //inicializa o wi-fi e mqtt ( trocar por ethernet )
   setup_wifi();// conecta à rede Wi-Fi
@@ -102,8 +121,7 @@ void setup() {
 
   // Configuração dos sensores
   //chuva
-  chuva.pino = 2; // pino do sensor de chuva
-  pinMode(chuva.pino, INPUT_PULLUP);
+  chuva.pino = 27; // pino do sensor de chuva
   chuva.amostragem_segundos = 10; // tempo de amostragem em segundos
   chuva.tipo_sensor = "sensor_chuva";
   chuva.unidade_medida = "mm/min";
@@ -111,18 +129,35 @@ void setup() {
   // nota: 0.2794 mm por pulso
 
   // direção do vento
-  dir_vento.pino = 35; // pino do sensor de direção do vento
-  dir_vento.amostragem_segundos = 10; // tempo de amostragem em segundos
+  dir_vento.pino = 32; // pino do sensor de direção do vento
+  dir_vento.amostragem_segundos = 1; // tempo de amostragem em segundos
   dir_vento.tipo_sensor = "sensor_dir_vento";
   dir_vento.unidade_medida = "graus"; // ver o datasheet para perceber os graus
   dir_vento.tipo_leitura = "analógico"; // divisor resistivo simples
+  
 
   // velocidade do vento
-  vel_vento.pino = 32; // pino do sensor de velocidade do vento
-  vel_vento.amostragem_segundos = 10; // tempo de amostragem em segundos
+  vel_vento.pino = 14; // pino do sensor de velocidade do vento
+  vel_vento.amostragem_segundos = 2; // tempo de amostragem em segundos
   vel_vento.tipo_sensor = "sensor_vel_vento"; 
   vel_vento.unidade_medida = "km/h"; // nota: 2.4Km/h = 60 pulsos/min
   vel_vento.tipo_leitura = "digital"; // leitura de pulsos
+  WindSpeedSensor windSpeed = { .windSpeedPin = vel_vento.pino };
+
+  //luminosidade
+  luz.pino = 34; // pino do sensor de luminosidade
+  luz.amostragem_segundos = 1; // tempo de amostragem em segundos
+  luz.tipo_sensor = "sensor_luz";
+  luz.unidade_medida = "lux";
+  luz.tipo_leitura = "analógico"; // divisor resistivo simples
+
+
+
+  // setup weather kit 
+  WeatherCore_init(&core, dir_vento.pino , vel_vento.pino, chuva.pino);
+  lightSensor_init(&lightSensor, &lightConfig);
+  WindSpeedSensor_init(&windSpeed);
+
 
 }
 
@@ -136,7 +171,16 @@ void loop() {
   //Le os sensores
   client.loop(); // 
   // leitura de sensores:
-  chuva.valor = ler_sensor_chuva(chuva.pino, chuva.amostragem_segundos, 0.2794); // mm/min
+  //chuva.valor = ler_sensor_chuva(chuva.pino, chuva.amostragem_segundos, 0.2794); // mm/min
+  dir_vento.valor = WindDirectionSensor_getDirection(&core); // graus
+  vel_vento.valor = WindSpeedSensor_getSpeed(); // km/h
+  chuva.valor = RainSensor_getTotalRain(&core); // mm/min
+ // luz.valor = lightSensor_readLux(&lightSensor); // lux
+
+
+  Serial.print("Direction: "); Serial.println(dir_vento.valor);
+  Serial.print("Speed: "); Serial.println(vel_vento.valor);
+  Serial.print("Rain: "); Serial.println(chuva.valor);
 
   // Verifica a ligação MQTT
 
@@ -148,5 +192,15 @@ void loop() {
   string mensagem = formatar_sensor(chuva);
   client.publish(testes.c_str(), mensagem.c_str());
 
-  delay(5000); // delay 5 segundo
+   testes = formatar_sistema(No_sistema, dir_vento);
+   mensagem = formatar_sensor(dir_vento);
+  client.publish(testes.c_str(), mensagem.c_str());
+
+  testes = formatar_sistema(No_sistema, vel_vento);
+  mensagem = formatar_sensor(vel_vento);
+  client.publish(testes.c_str(), mensagem.c_str());
+
+
+
+  delay(1000); // delay 5 segundo
 }

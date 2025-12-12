@@ -51,7 +51,6 @@ string formatar_sensor(sensor Sensor_atual){
 string formatar_sistema(sistema No_sistema, sensor Sensor_atual){
       //exemplo: 
       // tópico: Aveiro/Ubiwhere/Nó_001/sensor_chuva
-      // mensagem: { "sensor_chuva" : 12, "unidades" : "mm/min" }
     string teste= (No_sistema.cidade + "/" + No_sistema.local + "/"+ No_sistema.id_no + "/" +Sensor_atual.tipo_sensor );
     Serial.println(teste.c_str());
 
