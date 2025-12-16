@@ -13,13 +13,15 @@ sistema Configuracao_no();
 //durante a operação: obter cidade; obter local; obter Id_nó
 //output: ponteira para a classe sistema
 
-string formatar_sensor(sensor Sensor_atual);// sousa
+string formatar_sensor(sensor Sensor_atual);
 //formatar dados em string
 //input: dados do sensor, caracter especial
 //Durante operação: ler os dados e criar uma string 
 //ouptut: string estilo " {"temperature": 22.20}, {"Unidades": ºC} "
 
-string formatar_sistema(sistema No_sistema,sensor Sensor_atual );// sousa
+string formatar_sensor_ngsi_ld(sensor Sensor_atual, sistema No_sistema) ;
+
+string formatar_sistema(sistema No_sistema,sensor Sensor_atual );
 //formatar dados em string
 //input: dados do sensor, caracter especial
 //Durante operação: ler os dados e criar uma string 

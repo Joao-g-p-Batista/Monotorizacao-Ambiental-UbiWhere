@@ -26,11 +26,11 @@ class sensor {
     int pino=9999;                          // pino do sensor
     float valor=9999;                       // valor do sensor
     int amostragem_segundos=2;              // tempo de amostragem em segundos
-    string tipo_sensor=" não_definido ";    // tipo de sensor ( chuva, vento, etc )
-    string unidade_medida="não definido";   // unidade de medida ( mm, m/s, etc )
+    string tipo_sensor=" não_definido";    // tipo de sensor ( chuva, vento, etc )
+    string unidade_medida="não definido";   // unidade de medida ( mm, m/s, etc ) em unitcode UN/Cefact codes
     int maximo_medida =  999999;            // valor maximo que o sensor devia ler
     int minimo_medida = -999999;            // Valor minimo que o sensor devia les
     string flags="Vazio";                   // flags de leitura ( Ok, NOk)
-    string tipo_leitura = " não definido "; // analógico, digital, I2C, etc
+    string tipo_leitura = "não definido_kjsbfiubeifkn "; // analógico, digital, I2C, etc
 };
 #endif
